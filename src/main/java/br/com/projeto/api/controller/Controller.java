@@ -3,6 +3,8 @@ package br.com.projeto.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.service.annotation.GetExchange;
 
 import br.com.projeto.api.Model.Pessoa;
 import br.com.projeto.api.repositorio.Repositorio;
+import br.com.projeto.api.service.Servico;
 
 @RestController
 public class Controller {
@@ -21,30 +24,36 @@ public class Controller {
     @Autowired
     private Repositorio pessoaRepositorio;
 
+    @Autowired
+    private Servico servico;
+
+
+    private ResponseEntity responseEntity;
+
     @GetMapping("/pessoas/contador")
     public long contador() {
         return pessoaRepositorio.count();
     }
 
     @PostMapping("/pessoas")
-    public Pessoa cadastrar(@RequestBody Pessoa pessoa) {
-        return pessoaRepositorio.save(pessoa);
+    public ResponseEntity<?> cadastrar(@RequestBody Pessoa pessoa) {
+        return servico.cadastrar(pessoa);
     }
 
     @GetMapping("/pessoas")
-    public List<Pessoa> listar() {
-        return pessoaRepositorio.findByOrderByNomeDesc();
+    public ResponseEntity<?> listar() {
+        return servico.listar();
     }
 
     @GetMapping("/pessoas/{id}")
-    public Pessoa listarPorId(@PathVariable int id) {
-        return pessoaRepositorio.findById(id);
+    public ResponseEntity<?> listarPorId(@PathVariable int id) {
+        return servico.listarPorId(id);
     }
 
     @PutMapping("/pessoas/{id}")
-    public Pessoa updaPessoa(@RequestBody Pessoa pessoa, @PathVariable int id) {
+    public ResponseEntity<?> updaPessoa(@RequestBody Pessoa pessoa, @PathVariable int id) {
         pessoa.setId(id);
-        return pessoaRepositorio.save(pessoa);
+        return servico.editar(pessoa);
     }
 
     @GetMapping("/pessoas/com/j")
@@ -78,15 +87,13 @@ public class Controller {
     }
 
     @DeleteMapping("/pessoas/{id}")
-    public Void remove (@PathVariable int id) {
-        Pessoa pessoa = pessoaRepositorio.findById(id);
-        pessoaRepositorio.delete(pessoa);
-        return null;
+    public ResponseEntity<?> remove (@PathVariable int id) {
+        return servico.excluir(id);
     }
 
     @GetMapping("/pessoas/status")
-    public String status() {
-        return "API funcionando";
+    public ResponseEntity<?> status() {
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
