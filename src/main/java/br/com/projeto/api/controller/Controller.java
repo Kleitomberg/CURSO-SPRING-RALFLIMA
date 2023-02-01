@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.service.annotation.GetExchange;
 
+import br.com.projeto.api.Model.Cliente;
 import br.com.projeto.api.Model.Pessoa;
 import br.com.projeto.api.repositorio.Repositorio;
 import br.com.projeto.api.service.Servico;
+import jakarta.validation.Valid;
 
 @RestController
 public class Controller {
@@ -94,6 +96,15 @@ public class Controller {
     @GetMapping("/pessoas/status")
     public ResponseEntity<?> status() {
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    //ROTAS Cliente
+
+    @PostMapping("/clientes")
+    public void cadastrarCliente(@Valid @RequestBody Cliente cliente) {
+
+
+
     }
 
 
